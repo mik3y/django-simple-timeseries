@@ -1,0 +1,6 @@
+__pycache__
+venv
+.coverage*
+.tox
+*.egg-info
+*.sqlite

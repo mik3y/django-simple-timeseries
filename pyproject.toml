@@ -1,0 +1,25 @@
+[tool.poetry]
+name = "django-simple-timeseries"
+version = "0.1.0"
+description = ""
+authors = ["mike wakerly <opensource@hoho.com>"]
+license = "MIT"
+
+[tool.poetry.dependencies]
+python = "^3.7"
+
+[tool.poetry.dev-dependencies]
+pytest = "^6.2.2"
+flake8 = "^3.9.0"
+black = "^20.8b1"
+isort = "^5.8.0"
+tox = "^3.23.0"
+Django = "^3.1.7"
+django-jsonfield-backport = "^1.0.3"
+pytest-django = "^4.1.0"
+freezegun = "^1.1.0"
+setuptools = "^54.2.0"
+
+[build-system]
+requires = ["poetry-core>=1.0.0", "setuptools"]
+build-backend = "poetry.core.masonry.api"
