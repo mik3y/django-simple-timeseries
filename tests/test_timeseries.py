@@ -157,3 +157,20 @@ class TimeseriesTestCase(unittest.TestCase):
             ],
             list(self.ts.iter_points()),
         )
+
+    def test_get_normalized_points(self):
+        self.ts.add(1.23, when=self.now)
+        self.ts.add(1.23, when=self.now + timedelta(seconds=5))
+        self.assertEqual((None, None, []), self.ts.get_normalized_points())
+        self.ts.add(2.23, when=self.now + timedelta(seconds=5))
+        self.assertEqual(
+            (
+                1.23,
+                2.23,
+                [
+                    (datetime(2020, 1, 1, 2, 30, 0, tzinfo=timezone.utc), 0.0),
+                    (datetime(2020, 1, 1, 2, 30, 5, tzinfo=timezone.utc), 1.0),
+                ],
+            ),
+            self.ts.get_normalized_points(),
+        )
