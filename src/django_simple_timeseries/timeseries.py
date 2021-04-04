@@ -158,6 +158,9 @@ class Timeseries:
             return None, None, []
 
         denom = maxval - minval
+        if denom == 0:
+            return None, None, []
+
         ret = []
         for ts, v in points:
             if v is not None:
