@@ -4,3 +4,5 @@ venv
 .tox
 *.egg-info
 *.sqlite
+build/
+dist/

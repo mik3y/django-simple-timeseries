@@ -1,7 +1,7 @@
 try:
     from django.db.models import JSONField
 except ImportError:
-    from django_jsonfield_backport import JSONField
+    from django_jsonfield_backport.models import JSONField
 
 from django_simple_timeseries.forms import TimeseriesFormField
 from django_simple_timeseries.timeseries import Timeseries
