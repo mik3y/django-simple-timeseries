@@ -4,6 +4,9 @@ Serializes small, simple timeseries to a database with Django. Provides the `Tim
 
 Status: Experimental.
 
+![Lint status](https://github.com/mik3y/django-simple-timeseries/actions/workflows/lint.yml/badge.svg)
+![Test status](https://github.com/mik3y/django-simple-timeseries/actions/workflows/test.yml/badge.svg)
+
 ## Example
 
 Define a `TimeseriesField` on a model:
@@ -36,6 +39,21 @@ You can then access `Timeseries` methods on it:
     (datetime(2020, 1, 2, 2, 30, 0, tzinfo=<UTC>), 26.5),
 ]
 ```
+
+## Requirements
+
+This package supports and is tested against the latest patch versions of:
+
+* **Python:** 3.7, 3.8, 3.9
+* **Django:** 2.2, 3.0, 3.1
+* **MariaDB:** 10.2, 10.3, 10.4, 10.5
+* **MySQL:** 5.7, 8.0
+* **Oracle:** 12.2+ (only tested against 12.2.0.1 SE)
+* **PostgreSQL:** 9.5, 10, 11, 12
+* **SQLite:** 3.9.0+
+
+All database backends are tested with the latest versions of their drivers. SQLite is also tested on GitHub Actions' latest macOS and Windows virtual environments.
+
 
 ## Installation
 
