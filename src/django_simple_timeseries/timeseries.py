@@ -10,10 +10,18 @@ def parse_isodate(s):
 
 
 class Timeseries:
+    VERSION = 1
+
     RESULT_ADDED = "added"
     RESULT_REPLACED = "replaced"
     RESULT_TRUNCATED = "truncated"
     RESULT_SHIFTED = "shifted"
+
+    KEY_VERSION = "v"
+    KEY_START_TIME = "start"
+    KEY_RESOLUTION_SECONDS = "res"
+    KEY_MAX_POINTS = "max"
+    KEY_DATA_POINTS = "data"
 
     def __init__(
         self,
@@ -40,11 +48,14 @@ class Timeseries:
 
     @classmethod
     def from_object(cls, o):
+        object_version = o.get(cls.KEY_VERSION)
+        if object_version != cls.VERSION:
+            raise ValueError(f"Unsupported object version: {repr(object_version)}")
         return cls(
-            start_time=parse_isodate(o["start_time"]),
-            data_points=o["data_points"],
-            max_points=o["max_points"],
-            resolution_seconds=o["resolution_seconds"],
+            start_time=parse_isodate(o[cls.KEY_START_TIME]),
+            data_points=o[cls.KEY_DATA_POINTS],
+            max_points=o[cls.KEY_MAX_POINTS],
+            resolution_seconds=o[cls.KEY_RESOLUTION_SECONDS],
         )
 
     @classmethod
@@ -74,10 +85,11 @@ class Timeseries:
 
     def to_object(self):
         return {
-            "start_time": self.start_time.isoformat(timespec="seconds"),
-            "data_points": self.data_points,
-            "max_points": self.max_points,
-            "resolution_seconds": self.resolution.seconds,
+            self.KEY_VERSION: self.VERSION,
+            self.KEY_START_TIME: self.start_time.isoformat(timespec="seconds"),
+            self.KEY_DATA_POINTS: self.data_points,
+            self.KEY_MAX_POINTS: self.max_points,
+            self.KEY_RESOLUTION_SECONDS: self.resolution.seconds,
         }
 
     def to_json_string(self):

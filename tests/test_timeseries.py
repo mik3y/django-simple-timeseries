@@ -15,10 +15,11 @@ class TimeseriesTestCase(unittest.TestCase):
     def test_empty_ts(self):
         self.assertEqual(
             {
-                "start_time": "2020-01-01T02:30:00+00:00",
-                "max_points": 5,
-                "resolution_seconds": 5,
-                "data_points": [],
+                "v": 1,
+                "start": "2020-01-01T02:30:00+00:00",
+                "max": 5,
+                "res": 5,
+                "data": [],
             },
             self.ts.to_object(),
         )
@@ -93,10 +94,11 @@ class TimeseriesTestCase(unittest.TestCase):
         self.ts.add(3.14, when=self.now + timedelta(seconds=10))
         self.assertEqual(
             {
-                "start_time": "2020-01-01T02:30:00+00:00",
-                "max_points": 5,
-                "resolution_seconds": 5,
-                "data_points": [
+                "v": 1,
+                "start": "2020-01-01T02:30:00+00:00",
+                "max": 5,
+                "res": 5,
+                "data": [
                     1.23,
                     2.34,
                     3.14,
@@ -108,10 +110,11 @@ class TimeseriesTestCase(unittest.TestCase):
         json_str = self.ts.to_json_string()
         self.assertEqual(
             {
-                "start_time": "2020-01-01T02:30:00+00:00",
-                "max_points": 5,
-                "resolution_seconds": 5,
-                "data_points": [
+                "v": 1,
+                "start": "2020-01-01T02:30:00+00:00",
+                "max": 5,
+                "res": 5,
+                "data": [
                     1.23,
                     2.34,
                     3.14,
@@ -122,10 +125,11 @@ class TimeseriesTestCase(unittest.TestCase):
 
         self.assertEqual(
             {
-                "start_time": "2020-01-01T02:30:00+00:00",
-                "max_points": 5,
-                "resolution_seconds": 5,
-                "data_points": [
+                "v": 1,
+                "start": "2020-01-01T02:30:00+00:00",
+                "max": 5,
+                "res": 5,
+                "data": [
                     1.23,
                     2.34,
                     3.14,

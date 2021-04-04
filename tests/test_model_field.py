@@ -17,10 +17,11 @@ class TimeseriesFieldTests(TestCase):
         self.assertEqual(datetime(2021, 4, 3, tzinfo=timezone.utc), o.ts1.start_time)
         self.assertEqual(
             {
-                "resolution_seconds": 60,
-                "max_points": 1440,
-                "data_points": [],
-                "start_time": "2021-04-03T00:00:00+00:00",
+                "v": 1,
+                "res": 60,
+                "max": 1440,
+                "data": [],
+                "start": "2021-04-03T00:00:00+00:00",
             },
             o.ts1.to_object(),
         )
@@ -30,10 +31,11 @@ class TimeseriesFieldTests(TestCase):
         self.assertEqual(5, o.ts2.resolution.seconds)
         self.assertEqual(
             {
-                "resolution_seconds": 5,
-                "max_points": 3,
-                "data_points": [],
-                "start_time": "2021-04-03T00:00:00+00:00",
+                "v": 1,
+                "res": 5,
+                "max": 3,
+                "data": [],
+                "start": "2021-04-03T00:00:00+00:00",
             },
             o.ts2.to_object(),
         )
@@ -53,10 +55,11 @@ class TimeseriesFieldTests(TestCase):
         o = BasicModel.objects.get(pk=o.pk)
         self.assertEqual(
             {
-                "resolution_seconds": 60,
-                "max_points": 1440,
-                "data_points": [1.0],
-                "start_time": "2021-04-03T00:00:00+00:00",
+                "v": 1,
+                "res": 60,
+                "max": 1440,
+                "data": [1.0],
+                "start": "2021-04-03T00:00:00+00:00",
             },
             o.ts1.to_object(),
         )
@@ -69,10 +72,11 @@ class TimeseriesFieldTests(TestCase):
         o = BasicModel.objects.get(pk=o.pk)
         self.assertEqual(
             {
-                "resolution_seconds": 60,
-                "max_points": 1440,
-                "data_points": [1.0, 2.1],
-                "start_time": "2021-04-03T00:00:00+00:00",
+                "v": 1,
+                "res": 60,
+                "max": 1440,
+                "data": [1.0, 2.1],
+                "start": "2021-04-03T00:00:00+00:00",
             },
             o.ts1.to_object(),
         )
