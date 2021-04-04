@@ -15,6 +15,13 @@ INSTALLED_APPS = [
     "tests",
 ]
 
+try:
+    import django_jsonfield_backport  # noqa
+
+    INSTALLED_APPS += ["django_jsonfield_backport"]
+except ImportError:
+    pass
+
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
