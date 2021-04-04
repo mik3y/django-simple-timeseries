@@ -1,5 +1,9 @@
 # `django_simple_timeseries` changelog
 
+## v0.1.2 (2021-04-04)
+
+* Bugfix: Fix divide-by-zero.
+
 ## v0.1.1 (2021-04-04)
 
 * Fix Django 2.2 & 3.0 compatibility.
