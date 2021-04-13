@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "django-simple-timeseries"
-version = "0.1.2"
+version = "0.2.0"
 description = ""
 authors = ["mike wakerly <opensource@hoho.com>"]
 license = "MIT"
