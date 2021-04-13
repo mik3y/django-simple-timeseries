@@ -1,8 +1,8 @@
 # `django_simple_timeseries` changelog
 
-## Current version (in development)
+## v0.2.0 (2021-04-13)
 
-* Bugfix: Avoid generating unnecessary `default` argument in migrations. 
+* Bugfix: Avoid generating unnecessary `default` argument in migrations.
 
 ## v0.1.2 (2021-04-04)
 
