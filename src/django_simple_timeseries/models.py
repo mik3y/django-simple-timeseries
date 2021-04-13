@@ -23,6 +23,8 @@ class TimeseriesField(JSONField):
         name, path, args, kwargs = super().deconstruct()
         kwargs["resolution_seconds"] = self.resolution_seconds
         kwargs["max_points"] = self.max_points
+        if kwargs.get("default") == self.new_default_timeseries:
+            del kwargs["default"]
         return name, path, args, kwargs
 
     def from_db_value(self, value, expression, connection):

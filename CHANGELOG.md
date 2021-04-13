@@ -1,5 +1,9 @@
 # `django_simple_timeseries` changelog
 
+## Current version (in development)
+
+* Bugfix: Avoid generating unnecessary `default` argument in migrations. 
+
 ## v0.1.2 (2021-04-04)
 
 * Bugfix: Fix divide-by-zero.
