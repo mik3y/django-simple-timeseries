@@ -1,5 +1,9 @@
 # `django_simple_timeseries` changelog
 
+## Current version
+
+* Bugfix: Django serialization compatibility.
+
 ## v0.2.0 (2021-04-13)
 
 * Bugfix: Avoid generating unnecessary `default` argument in migrations.
