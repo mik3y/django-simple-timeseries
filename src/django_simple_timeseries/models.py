@@ -17,7 +17,9 @@ class TimeseriesField(JSONField):
         super().__init__(*args, **kwargs)
 
     def new_default_timeseries(self):
-        return Timeseries(resolution_seconds=self.resolution_seconds, max_points=self.max_points)
+        return Timeseries(
+            resolution_seconds=self.resolution_seconds, max_points=self.max_points
+        )
 
     def deconstruct(self):
         name, path, args, kwargs = super().deconstruct()
