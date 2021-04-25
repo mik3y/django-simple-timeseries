@@ -1,5 +1,7 @@
+import json
 from datetime import datetime, timezone
 
+from django.core import serializers
 from django.test import TestCase
 from freezegun import freeze_time
 
@@ -9,6 +11,8 @@ from .models import BasicModel
 
 
 class TimeseriesFieldTests(TestCase):
+    maxDiff = None
+
     @freeze_time("2021-04-03")
     def test_unsaved_with_defaults(self):
         o = BasicModel()
@@ -79,4 +83,23 @@ class TimeseriesFieldTests(TestCase):
                 "start": "2021-04-03T00:00:00+00:00",
             },
             o.ts1.to_object(),
+        )
+
+    def test_serialization(self):
+        with freeze_time("2021-04-03"):
+            o = BasicModel()
+            o.save()
+            data = serializers.serialize("json", BasicModel.objects.all())
+        obj = json.loads(data)
+        self.assertEqual(1, len(obj))
+        self.assertDictEqual(
+            {
+                "model": "tests.basicmodel",
+                "pk": o.id,
+                "fields": {
+                    "ts1": '{"v": 1, "start": "2021-04-03T00:00:00+00:00", "data": [], "max": 1440, "res": 60}',  # noqa
+                    "ts2": '{"v": 1, "start": "2021-04-03T00:00:00+00:00", "data": [], "max": 3, "res": 5}',  # noqa
+                },
+            },
+            obj[0],
         )
