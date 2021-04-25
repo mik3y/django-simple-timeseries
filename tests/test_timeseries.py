@@ -142,7 +142,9 @@ class TimeseriesTestCase(unittest.TestCase):
         """Ensure datetimes are downsampled to appropriate bucket."""
         self.ts.add(1.23, when=self.now)
         self.assertEqual(True, self.ts.has_a_current_sample(when=self.now))
-        self.assertEqual(True, self.ts.has_a_current_sample(when=self.now + timedelta(seconds=1)))
+        self.assertEqual(
+            True, self.ts.has_a_current_sample(when=self.now + timedelta(seconds=1))
+        )
         self.assertEqual(
             False, self.ts.has_a_current_sample(when=self.now + timedelta(seconds=10))
         )
