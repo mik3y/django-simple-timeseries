@@ -5,6 +5,7 @@
 * Bugfix: Django serialization compatibility.
 * Compatibility: Dropped official support for older Python/Django versions, but things probably still work fine.
 * Compatibility: Dropped official tests for Oracle and MariaDB, but things probably still work fine.
+* Improvement: Return an empty timeseries if a malformed value is deserialized from the database.
 
 ## v0.2.0 (2021-04-13)
 
