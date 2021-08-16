@@ -1,3 +1,5 @@
+import logging
+
 try:
     from django.db.models import JSONField
 except ImportError:
@@ -5,6 +7,8 @@ except ImportError:
 
 from django_simple_timeseries.forms import TimeseriesFormField
 from django_simple_timeseries.timeseries import Timeseries
+
+logger = logging.getLogger(__name__)
 
 __all__ = ["TimeseriesField"]
 
@@ -35,7 +39,11 @@ class TimeseriesField(JSONField):
         json_value = super().from_db_value(value, expression, connection)
         if json_value is None:
             return self.new_default_timeseries()
-        return Timeseries.from_object(json_value)
+        try:
+            return Timeseries.from_object(json_value)
+        except (ValueError, TypeError) as e:
+            logger.warning(f"Database value invalid, returning empty timeseries: {e}")
+            return self.new_default_timeseries()
 
     def get_prep_value(self, value):
         """
@@ -46,6 +54,19 @@ class TimeseriesField(JSONField):
         object_value = value.to_object()
         json_value = super().get_prep_value(object_value)
         return json_value
+
+    def to_python(self, value):
+        if not value:
+            return None
+        elif isinstance(value, Timeseries):
+            return value
+        try:
+            if isinstance(value, str):
+                return Timeseries.from_json_string(value)
+            return Timeseries.from_object(value)
+        except (TypeError, ValueError) as e:
+            logger.warning(f"Database value invalid, returning empty timeseries: {e}")
+            return self.new_default_timeseries()
 
     def formfield(self, **kwargs):
         return TimeseriesFormField(**kwargs)

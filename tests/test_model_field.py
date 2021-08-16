@@ -103,3 +103,26 @@ class TimeseriesFieldTests(TestCase):
             },
             obj[0],
         )
+
+    def test_deserialize_bad_value(self):
+        bad_values = json.dumps(
+            [
+                {
+                    "model": "tests.basicmodel",
+                    "pk": 123,
+                    "fields": {
+                        "ts1": "invalid_json",
+                        "ts2": '{"v": 1, "start": "2021-04-03T00:00:00+00:00", "data": [], "max": 3, "res": 5}',  # noqa
+                    },
+                },
+            ]
+        )
+        with freeze_time("2021-05-05"):
+            objects = list(serializers.deserialize("json", bad_values))
+
+        self.assertEqual(
+            datetime(2021, 5, 5, tzinfo=timezone.utc), objects[0].object.ts1.start_time
+        )
+        self.assertEqual(
+            datetime(2021, 4, 3, tzinfo=timezone.utc), objects[0].object.ts2.start_time
+        )
