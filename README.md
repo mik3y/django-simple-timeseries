@@ -44,8 +44,8 @@ You can then access `Timeseries` methods on it:
 
 This package supports and is tested against the latest patch versions of:
 
-* **Python:** 3.7, 3.8, 3.9
-* **Django:** 2.2, 3.0, 3.1
+* **Python:** 3.7, 3.8, 3.9, 3.10
+* **Django:** 2.2, 3.0, 3.1, 4.0
 * **MariaDB:** 10.2, 10.3, 10.4, 10.5
 * **MySQL:** 5.7, 8.0
 * **Oracle:** 12.2+ (only tested against 12.2.0.1 SE)
@@ -71,7 +71,7 @@ pip install django_jsonfield_backport
 
 ### `Timeseries`
 
-The `Timeseries` class implements a simple vector-like timeseries. Timeseries data is always contiguous.  
+The `Timeseries` class implements a simple vector-like timeseries. Timeseries data is always contiguous.
 
 Internally, all timeseries instances have:
 * `.start_time`, a `datetime.datetime` corresponding to the first data point;
