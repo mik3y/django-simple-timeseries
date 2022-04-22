@@ -2,7 +2,11 @@ import json
 from string import Template
 
 from django.forms import Field, Widget
-from django.utils.translation import gettext_lazy as _
+
+try:
+    from django.utils.translation import ugettext_lazy as _
+except ImportError:
+    from django.utils.translation import gettext_lazy as _
 
 __all__ = ("TimeseriesFormField", "TimeseriesWidget")
 
