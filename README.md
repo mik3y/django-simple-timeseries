@@ -44,27 +44,20 @@ You can then access `Timeseries` methods on it:
 
 This package supports and is tested against the latest patch versions of:
 
-* **Python:** 3.7, 3.8, 3.9, 3.10
-* **Django:** 2.2, 3.0, 3.1, 4.0
-* **MariaDB:** 10.2, 10.3, 10.4, 10.5
-* **MySQL:** 5.7, 8.0
-* **Oracle:** 12.2+ (only tested against 12.2.0.1 SE)
-* **PostgreSQL:** 9.5, 10, 11, 12
-* **SQLite:** 3.9.0+
+- **Python:** 3.8, 3.9, 3.10
+- **Django:** 3.2, 4.0
+- **MariaDB:** 10.7
+- **MySQL:** 8.0
+- **Oracle:** 12.2+ (only tested against 12.2.0.1 SE)
+- **PostgreSQL:** 10, 11, 12
+- **SQLite:** 3.9.0+
 
 All database backends are tested with the latest versions of their drivers. SQLite is also tested on GitHub Actions' latest macOS and Windows virtual environments.
-
 
 ## Installation
 
 ```
 pip install django_simple_timeseries
-```
-
-For Django 3.1 and newer, no additional dependencies are required. For earlier versions, this project requires `django_jsonfield_backport`:
-
-```
-pip install django_jsonfield_backport
 ```
 
 ## How it works
@@ -74,15 +67,16 @@ pip install django_jsonfield_backport
 The `Timeseries` class implements a simple vector-like timeseries. Timeseries data is always contiguous.
 
 Internally, all timeseries instances have:
-* `.start_time`, a `datetime.datetime` corresponding to the first data point;
-* `.data`, the recorded data points (or y-values); and
-* `.resolution`, a timedelta which describes the fixed interval between samples.
+
+- `.start_time`, a `datetime.datetime` corresponding to the first data point;
+- `.data`, the recorded data points (or y-values); and
+- `.resolution`, a timedelta which describes the fixed interval between samples.
 
 Samples are added by calling the `add()` method. The `add()` method ensures contiguousness with the following policy:
-* If fewer than `resolution` seconds have elapsed since the most recent sample, the most recent sample is replaced.
-* If more than `resolution` seconds have elapsed since the last sample, the vector is extended by the appropriate number of samples (`time_delta % resolution - 1`), each which will be recorded as gaps with the value `None`.
-* In all cases, the vector is trimmed to no more than `max_points` samples.
 
+- If fewer than `resolution` seconds have elapsed since the most recent sample, the most recent sample is replaced.
+- If more than `resolution` seconds have elapsed since the last sample, the vector is extended by the appropriate number of samples (`time_delta % resolution - 1`), each which will be recorded as gaps with the value `None`.
+- In all cases, the vector is trimmed to no more than `max_points` samples.
 
 ### `TimeseriesField`
 
