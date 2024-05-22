@@ -2,6 +2,7 @@ __pycache__
 venv
 .coverage*
 .tox
+.DS_Store
 *.egg-info
 *.sqlite
 build/

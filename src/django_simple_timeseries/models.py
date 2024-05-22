@@ -1,7 +1,4 @@
-try:
-    from django.db.models import JSONField
-except ImportError:
-    from django_jsonfield_backport.models import JSONField
+from django.db.models import JSONField
 
 from django_simple_timeseries.forms import TimeseriesFormField
 from django_simple_timeseries.timeseries import Timeseries
@@ -17,9 +14,7 @@ class TimeseriesField(JSONField):
         super().__init__(*args, **kwargs)
 
     def new_default_timeseries(self):
-        return Timeseries(
-            resolution_seconds=self.resolution_seconds, max_points=self.max_points
-        )
+        return Timeseries(resolution_seconds=self.resolution_seconds, max_points=self.max_points)
 
     def deconstruct(self):
         name, path, args, kwargs = super().deconstruct()

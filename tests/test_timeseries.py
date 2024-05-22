@@ -1,6 +1,6 @@
 import json
 import unittest
-from datetime import timedelta, timezone
+from datetime import UTC, timedelta
 
 from django.utils.timezone import datetime
 
@@ -9,7 +9,7 @@ from django_simple_timeseries.timeseries import Timeseries
 
 class TimeseriesTestCase(unittest.TestCase):
     def setUp(self):
-        self.now = datetime(2020, 1, 1, 2, 30, tzinfo=timezone.utc)
+        self.now = datetime(2020, 1, 1, 2, 30, tzinfo=UTC)
         self.ts = Timeseries(start_time=self.now, max_points=5, resolution_seconds=5)
 
     def test_empty_ts(self):
@@ -142,20 +142,16 @@ class TimeseriesTestCase(unittest.TestCase):
         """Ensure datetimes are downsampled to appropriate bucket."""
         self.ts.add(1.23, when=self.now)
         self.assertEqual(True, self.ts.has_a_current_sample(when=self.now))
-        self.assertEqual(
-            True, self.ts.has_a_current_sample(when=self.now + timedelta(seconds=1))
-        )
-        self.assertEqual(
-            False, self.ts.has_a_current_sample(when=self.now + timedelta(seconds=10))
-        )
+        self.assertEqual(True, self.ts.has_a_current_sample(when=self.now + timedelta(seconds=1)))
+        self.assertEqual(False, self.ts.has_a_current_sample(when=self.now + timedelta(seconds=10)))
 
     def test_iter_points(self):
         self.ts.add(1.23, when=self.now)
         self.ts.add(2.34, when=self.now + timedelta(seconds=5))
         self.assertEqual(
             [
-                (datetime(2020, 1, 1, 2, 30, 0, tzinfo=timezone.utc), 1.23),
-                (datetime(2020, 1, 1, 2, 30, 5, tzinfo=timezone.utc), 2.34),
+                (datetime(2020, 1, 1, 2, 30, 0, tzinfo=UTC), 1.23),
+                (datetime(2020, 1, 1, 2, 30, 5, tzinfo=UTC), 2.34),
             ],
             list(self.ts.iter_points()),
         )
@@ -170,8 +166,8 @@ class TimeseriesTestCase(unittest.TestCase):
                 1.23,
                 2.23,
                 [
-                    (datetime(2020, 1, 1, 2, 30, 0, tzinfo=timezone.utc), 0.0),
-                    (datetime(2020, 1, 1, 2, 30, 5, tzinfo=timezone.utc), 1.0),
+                    (datetime(2020, 1, 1, 2, 30, 0, tzinfo=UTC), 0.0),
+                    (datetime(2020, 1, 1, 2, 30, 5, tzinfo=UTC), 1.0),
                 ],
             ),
             self.ts.get_normalized_points(),
