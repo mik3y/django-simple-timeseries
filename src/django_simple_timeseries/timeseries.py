@@ -105,9 +105,7 @@ class Timeseries:
             distance_in_samples = 0
 
         if distance_in_samples < 0:
-            raise ValueError(
-                f"Sample would go back in time: from {self.end_time} to {when}"
-            )
+            raise ValueError(f"Sample would go back in time: from {self.end_time} to {when}")
         elif distance_in_samples == 0:
             # Replace last value.
             if len(self.data_points):

@@ -1,5 +1,5 @@
 import json
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 from django.core import serializers
 from django.test import TestCase
@@ -18,7 +18,7 @@ class TimeseriesFieldTests(TestCase):
         o = BasicModel()
         self.assertEqual(1440, o.ts1.max_points)
         self.assertEqual(60, o.ts1.resolution.seconds)
-        self.assertEqual(datetime(2021, 4, 3, tzinfo=timezone.utc), o.ts1.start_time)
+        self.assertEqual(datetime(2021, 4, 3, tzinfo=UTC), o.ts1.start_time)
         self.assertEqual(
             {
                 "v": 1,
@@ -97,8 +97,20 @@ class TimeseriesFieldTests(TestCase):
                 "model": "tests.basicmodel",
                 "pk": o.id,
                 "fields": {
-                    "ts1": '{"v": 1, "start": "2021-04-03T00:00:00+00:00", "data": [], "max": 1440, "res": 60}',  # noqa
-                    "ts2": '{"v": 1, "start": "2021-04-03T00:00:00+00:00", "data": [], "max": 3, "res": 5}',  # noqa
+                    "ts1": {
+                        "v": 1,
+                        "start": "2021-04-03T00:00:00+00:00",
+                        "data": [],
+                        "max": 1440,
+                        "res": 60,
+                    },
+                    "ts2": {
+                        "v": 1,
+                        "start": "2021-04-03T00:00:00+00:00",
+                        "data": [],
+                        "max": 3,
+                        "res": 5,
+                    },
                 },
             },
             obj[0],

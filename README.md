@@ -42,14 +42,12 @@ You can then access `Timeseries` methods on it:
 
 ## Requirements
 
-This package supports and is tested against the latest patch versions of:
+This package is tested against the latest versions of:
 
-* **Python:** 3.7, 3.8, 3.9
-* **Django:** 2.2, 3.0, 3.1
-* **MariaDB:** 10.2, 10.3, 10.4, 10.5
-* **MySQL:** 5.7, 8.0
-* **Oracle:** 12.2+ (only tested against 12.2.0.1 SE)
-* **PostgreSQL:** 9.5, 10, 11, 12
+* **Python:** 3.12, 3.13
+* **Django:** 4.2
+* **MySQL:** 8.0
+* **PostgreSQL:** 12
 * **SQLite:** 3.9.0+
 
 All database backends are tested with the latest versions of their drivers. SQLite is also tested on GitHub Actions' latest macOS and Windows virtual environments.
@@ -59,12 +57,6 @@ All database backends are tested with the latest versions of their drivers. SQLi
 
 ```
 pip install django_simple_timeseries
-```
-
-For Django 3.1 and newer, no additional dependencies are required. For earlier versions, this project requires `django_jsonfield_backport`:
-
-```
-pip install django_jsonfield_backport
 ```
 
 ## How it works

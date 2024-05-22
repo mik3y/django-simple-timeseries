@@ -1,5 +1,7 @@
 import os
 
+from django.core.exceptions import ImproperlyConfigured
+
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = "secret"
 DEBUG = True
@@ -14,13 +16,6 @@ INSTALLED_APPS = [
     "django_simple_timeseries",
     "tests",
 ]
-
-try:
-    import django_jsonfield_backport  # noqa
-
-    INSTALLED_APPS += ["django_jsonfield_backport"]
-except ImportError:
-    pass
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -52,9 +47,13 @@ TEMPLATES = [
 
 STATIC_URL = "/static/"
 
+_DB_BACKEND = os.getenv("DB_BACKEND")
+if not _DB_BACKEND:
+    raise ImproperlyConfigured("DB_BACKEND must be set in env")
+
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.%s" % os.getenv("DB_BACKEND"),
+        "ENGINE": f"django.db.backends.{_DB_BACKEND}",
         "NAME": os.getenv("DB_NAME"),
         "USER": os.getenv("DB_USER"),
         "PASSWORD": os.getenv("DB_PASSWORD"),

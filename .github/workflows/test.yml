@@ -14,11 +14,9 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: [3.7, 3.8, 3.9]
+        python-version: ["3.12", "3.13"]
         mysql-image:
-          - mariadb:10.2
-          - mariadb:latest
-          - mysql:5.7
+          - mysql:8.0
           - mysql:latest
 
     services:
@@ -35,12 +33,12 @@ jobs:
         ports:
           - 3306:3306
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
     - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v2
+      uses: actions/setup-python@v5
       with:
         python-version: ${{ matrix.python-version }}
-    - uses: actions/cache@v2
+    - uses: actions/cache@v4
       with:
         path: ~/.cache/pip
         key: ${{ runner.os }}-pip-${{ github.job }}-${{ hashFiles('tox.ini') }}
@@ -60,61 +58,14 @@ jobs:
         DB_HOST: 127.0.0.1
         DB_PORT: 3306
 
-  oracle:
-    runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        python-version: [3.7, 3.8, 3.9]
-        oracle-version: [12c]
-    steps:
-    - uses: actions/checkout@v2
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v2
-      with:
-        python-version: ${{ matrix.python-version }}
-    - name: Download Oracle Database Docker image and setup script
-      run: |
-        docker pull quay.io/maksymbilenko/oracle-12c
-        mkdir oracle-scripts && cd oracle-scripts
-        wget https://gist.github.com/laymonage/b40c032770adbae53b1b6029655f792f/raw/e7aed2dcfb16612b5488c252bfb4911ab5f8c2a0/01_create_user.sql
-    - name: Run Oracle Database Docker image
-      run: |
-        docker run --name oracle -d -p 1521:1521 -v `pwd`/oracle-scripts:/docker-entrypoint-initdb.d quay.io/maksymbilenko/oracle-12c
-    - name: Install Oracle Instant Client
-      run: |
-        sudo apt update && sudo apt install alien
-        wget https://download.oracle.com/otn_software/linux/instantclient/oracle-instantclient-basiclite-linuxx64.rpm
-        sudo alien -i oracle-instantclient-basiclite-linuxx64.rpm
-    - name: Wait for Oracle Database to finish setup
-      run: |
-        until docker logs oracle | grep "Database ready to use."; do echo "Waiting..." && sleep 5; done
-    - uses: actions/cache@v2
-      with:
-        path: ~/.cache/pip
-        key: ${{ runner.os }}-pip-${{ github.job }}-${{ hashFiles('tox.ini') }}
-        restore-keys: |
-          ${{ runner.os }}-pip-
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip poetry
-        poetry install
-    - name: Test with tox
-      run: poetry run tox
-      env:
-        DB_BACKEND: oracle
-        DB_NAME: localhost/xe
-        DB_USER: django
-        DB_PASSWORD: django
-
   postgres:
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        python-version: [3.7, 3.8, 3.9]
+        python-version: ["3.12", "3.13"]
         postgres-image:
-          - postgres:9.5
+          - postgres:12
           - postgres:latest
     services:
       postgres:
@@ -129,12 +80,12 @@ jobs:
         ports:
           - 5432:5432
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
     - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v2
+      uses: actions/setup-python@v5
       with:
         python-version: ${{ matrix.python-version }}
-    - uses: actions/cache@v2
+    - uses: actions/cache@v4
       with:
         path: ~/.cache/pip
         key: ${{ runner.os }}-pip-${{ github.job }}-${{ hashFiles('tox.ini') }}
@@ -160,14 +111,14 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest, macos-latest]
-        python-version: [3.7, 3.8, 3.9]
+        python-version: ["3.12", "3.13"]
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
     - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v2
+      uses: actions/setup-python@v5
       with:
         python-version: ${{ matrix.python-version }}
-    - uses: actions/cache@v2
+    - uses: actions/cache@v4
       with:
         path: ~/.cache/pip
         key: ${{ runner.os }}-pip-${{ github.job }}-${{ hashFiles('tox.ini') }}
