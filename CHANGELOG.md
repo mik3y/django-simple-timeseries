@@ -1,6 +1,6 @@
 # `django_simple_timeseries` changelog
 
-## Current version
+## v0.3.0 (2025-05-04)
 
 * Bugfix: Django serialization compatibility.
 * Compatibility: Dropped official support for older Python/Django versions, but things probably still work fine.
