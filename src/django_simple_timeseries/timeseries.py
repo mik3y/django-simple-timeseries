@@ -64,9 +64,9 @@ class Timeseries:
         return cls.from_object(o)
 
     def normalize(self, dt):
-        ts = int(dt.replace(tzinfo=timezone.utc).timestamp())
+        ts = int(dt.replace(tzinfo=datetime.UTC).timestamp())
         normtime = ts - (ts % self.resolution.seconds)
-        ret = datetime.datetime.fromtimestamp(normtime, timezone.utc)
+        ret = datetime.datetime.fromtimestamp(normtime, datetime.UTC)
         return ret
 
     @property
