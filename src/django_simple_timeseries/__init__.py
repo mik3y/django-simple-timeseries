@@ -1,4 +1,4 @@
-from .models import TimeseriesField  # noqa
-from .timeseries import Timeseries  # noqa
+from .models import TimeseriesField
+from .timeseries import Timeseries
 
-default_app_config = "django_simple_timeseries.apps.SimpleTimeseriesConfig"
+__all__ = ["Timeseries", "TimeseriesField"]
