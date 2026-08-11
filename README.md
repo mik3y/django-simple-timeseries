@@ -15,12 +15,13 @@ Define a `TimeseriesField` on a model:
 from django.db import models
 from django_simple_timeseries import TimeseriesField
 
+
 class Appliance(models.Model):
     name = models.CharField(max_length=64)
     temperature = TimeseriesField(
         resolution_seconds=60 * 60,
         max_points=24,
-        help_text='Last 24 hours of temperature data',
+        help_text="Last 24 hours of temperature data",
     )
 ```
 

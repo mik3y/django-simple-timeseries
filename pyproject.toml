@@ -36,7 +36,9 @@ build-backend = "uv_build"
 
 [tool.ruff]
 line-length = 100
-target-version = 'py313'
+target-version = 'py312'
+# Lets isort recognize `django_simple_timeseries` as first-party rather than third-party.
+src = ["src"]
 exclude = [
   ".git",
   "node_modules",
@@ -46,21 +48,11 @@ exclude = [
   "migrations"
 ]
 
-[tool.ruff.format]
-quote-style = 'preserve'
-
 [tool.ruff.lint]
 select = [
-    # pycodestyle
-    "E",
-    # Pyflakes
-    "F",
-    # pyupgrade
-    "UP",
-    # flake8-bugbear
-    #"B",
-    # flake8-simplify
-    #"SIM",
-    # isort
-    "I",
+    "E",   # pycodestyle
+    "F",   # Pyflakes
+    "I",   # isort
+    "UP",  # pyupgrade
+    "B",   # flake8-bugbear
 ]

@@ -123,7 +123,7 @@ class Timeseries:
             return self.RESULT_TRUNCATED
         else:
             # Extend the vector to add this sample.
-            for i in range(0, distance_in_samples):
+            for _ in range(0, distance_in_samples):
                 self.data_points.append(None)
             trim_samples = 0
             if len(self.data_points) > self.max_points:
@@ -145,7 +145,7 @@ class Timeseries:
         maxval = None
         ret = []
         points = list(self.iter_points())
-        for ts, v in points:
+        for _ts, v in points:
             if v is None:
                 continue
             if minval is None or v < minval:
