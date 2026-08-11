@@ -6,7 +6,7 @@ from django.utils import timezone
 
 
 def parse_isodate(s):
-    return datetime.datetime.strptime(s, "%Y-%m-%dT%H:%M:%S%z")
+    return datetime.datetime.fromisoformat(s)
 
 
 class Timeseries:
@@ -200,7 +200,6 @@ class Timeseries:
         """
         minval = None
         maxval = None
-        ret = []
         points = list(self.iter_points())
         for _ts, v in points:
             if v is None:
