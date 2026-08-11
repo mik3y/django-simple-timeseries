@@ -4,6 +4,8 @@ from string import Template
 from django.forms import Field, Widget
 from django.utils.translation import gettext_lazy as _
 
+from django_simple_timeseries.timeseries import Timeseries
+
 __all__ = ("TimeseriesFormField", "TimeseriesWidget")
 
 # A sparkline SVG that draws itself.
@@ -44,7 +46,9 @@ class TimeseriesWidget(Widget):
     """Read-only widget rendering a `Timeseries` as an inline SVG sparkline."""
 
     def render(self, name, value, attrs=None, renderer=None):
-        minval, maxval, points = value.get_normalized_points()
+        if not isinstance(value, Timeseries):
+            return "<div>No timeseries data.</div>"
+        _minval, _maxval, points = value.get_normalized_points()
         svg = SPARKLINE_SVG_TEMPLATE.substitute(
             elementId=json.dumps(f"svg-for-{name}"),
             minval=json.dumps(0),
@@ -53,7 +57,7 @@ class TimeseriesWidget(Widget):
         )
         return f"""
             <div style="display: inline-block;">
-                <div>Timeseries with {len(points)} points</div>
+                <div>Timeseries with {len(value)} points</div>
                 <div>{svg}</div>
             </div>
         """
