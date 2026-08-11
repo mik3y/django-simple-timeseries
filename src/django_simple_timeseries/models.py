@@ -60,16 +60,17 @@ class TimeseriesField(JSONField):
         value is the current value of the model’s attribute, and the method should return data
         in a format that has been prepared for use as a parameter in a query.
         """
-        value = value or self.new_default_timeseries()
+        if value is None:
+            value = self.new_default_timeseries()
         object_value = value.to_object()
         json_value = super().get_prep_value(object_value)
         return json_value
 
     def to_python(self, value):
-        if not value:
-            return None
-        elif isinstance(value, Timeseries):
+        if isinstance(value, Timeseries):
             return value
+        elif not value:
+            return None
         try:
             if isinstance(value, str):
                 return Timeseries.from_json_string(value)
