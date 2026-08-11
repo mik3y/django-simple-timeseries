@@ -2,6 +2,8 @@
 
 ## Current version (in development)
 
+* Bugfix: Resolutions of one day or longer no longer crash with `ZeroDivisionError` and serialize correctly.
+
 * Build: Switched packaging from poetry to uv.
 * Compatibility: Now tested on Python 3.12-3.14 and Django 4.2/5.2/6.0.
 * Docs: Added an API reference generated from docstrings (`docs/api.md`).

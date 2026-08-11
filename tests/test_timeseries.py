@@ -88,6 +88,16 @@ class TimeseriesTestCase(unittest.TestCase):
         self.assertEqual(result, Timeseries.RESULT_TRUNCATED)
         self.assertEqual(self.now + timedelta(seconds=300), self.ts.start_time)
 
+    def test_day_resolution(self):
+        """Resolutions of a day or longer must bucket and serialize correctly."""
+        ts = Timeseries(start_time=self.now, max_points=7, resolution_seconds=86400)
+        ts.add(1.0, when=self.now)
+        ts.add(2.0, when=self.now + timedelta(days=1))
+        self.assertEqual(2, len(ts))
+        self.assertEqual(datetime(2020, 1, 1, tzinfo=UTC), ts.start_time)
+        self.assertEqual(86400, ts.to_object()["res"])
+        self.assertEqual(ts, Timeseries.from_object(ts.to_object()))
+
     def test_to_from_json(self):
         self.ts.add(1.23, when=self.now)
         self.ts.add(2.34, when=self.now + timedelta(seconds=5))

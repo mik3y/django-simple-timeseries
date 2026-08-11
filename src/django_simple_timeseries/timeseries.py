@@ -91,7 +91,7 @@ class Timeseries:
         Naive datetimes are assumed to be in UTC.
         """
         ts = int(dt.replace(tzinfo=datetime.UTC).timestamp())
-        normtime = ts - (ts % self.resolution.seconds)
+        normtime = ts - (ts % int(self.resolution.total_seconds()))
         ret = datetime.datetime.fromtimestamp(normtime, datetime.UTC)
         return ret
 
@@ -121,7 +121,7 @@ class Timeseries:
             self.KEY_START_TIME: self.start_time.isoformat(timespec="seconds"),
             self.KEY_DATA_POINTS: self.data_points,
             self.KEY_MAX_POINTS: self.max_points,
-            self.KEY_RESOLUTION_SECONDS: self.resolution.seconds,
+            self.KEY_RESOLUTION_SECONDS: int(self.resolution.total_seconds()),
         }
 
     def to_json_string(self):
