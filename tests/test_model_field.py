@@ -116,6 +116,18 @@ class TimeseriesFieldTests(TestCase):
             obj[0],
         )
 
+    def test_empty_series_round_trips(self):
+        """An empty series keeps its start_time across saves instead of being reset."""
+        with freeze_time("2021-04-03"):
+            o = BasicModel()
+        with freeze_time("2021-05-05"):
+            o.save()
+            o.refresh_from_db()
+        self.assertEqual(datetime(2021, 4, 3, tzinfo=UTC), o.ts1.start_time)
+
+        field = BasicModel._meta.get_field("ts1")
+        self.assertIs(o.ts1, field.to_python(o.ts1))
+
     def test_malformed_db_value_returns_default(self):
         """A stored object missing keys is replaced with a fresh series, not a KeyError."""
         field = BasicModel._meta.get_field("ts1")
