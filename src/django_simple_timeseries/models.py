@@ -11,6 +11,19 @@ __all__ = ["TimeseriesField"]
 
 
 class TimeseriesField(JSONField):
+    """A field storing a `Timeseries`, backed by a `JSONField` column.
+
+    The model attribute is always a `Timeseries` instance: new instances get a
+    fresh, empty series, and values loaded from the database are deserialized
+    back into `Timeseries` objects. A malformed database value is logged and
+    replaced with a fresh series rather than raised.
+
+    Arguments:
+        resolution_seconds: The width of each bucket, in seconds.
+        max_points: Maximum number of buckets to retain; older values are
+            dropped as newer samples are recorded.
+    """
+
     def __init__(self, resolution_seconds=60, max_points=60 * 24, *args, **kwargs):
         self.resolution_seconds = resolution_seconds
         self.max_points = max_points
