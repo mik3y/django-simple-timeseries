@@ -1,5 +1,11 @@
 # `django_simple_timeseries` changelog
 
+## Current version (in development)
+
+* Build: Switched packaging from poetry to uv.
+* Compatibility: Now tested on Python 3.12-3.14 and Django 4.2/5.2/6.0.
+* Docs: Added an API reference generated from docstrings (`docs/api.md`).
+
 ## v0.3.0 (2025-05-04)
 
 * Bugfix: Django serialization compatibility.
