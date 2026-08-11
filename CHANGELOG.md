@@ -9,6 +9,7 @@
 * Bugfix: Saving a non-`Timeseries` value raises a clear `TypeError` instead of an opaque `AttributeError`.
 * Bugfix: `resolution_seconds` and `max_points` are now keyword-only, so a positional `verbose_name` is no longer silently misread as `resolution_seconds`.
 * Bugfix: The admin widget renders a placeholder for missing values instead of crashing, and reports the true number of points when all values are equal.
+* Improvement: An explicit `default=` passed to `TimeseriesField` is now respected instead of silently overwritten.
 
 * Build: Switched packaging from poetry to uv.
 * Compatibility: Now tested on Python 3.12-3.14 and Django 4.2/5.2/6.0.
