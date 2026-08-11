@@ -2,18 +2,16 @@ default_language_version:
   python: python3.12
 
 repos:
-  - repo: https://github.com/floatingpurr/sync_with_poetry
-    rev: '1.2.0'
+  - repo: https://github.com/tsvikas/sync-with-uv
+    rev: v0.5.0
     hooks:
-      - id: sync_with_poetry
-        args: []
-        additional_dependencies: ['poetry']
+      - id: sync-with-uv
 
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.11.8
+    rev: v0.16.2
     hooks:
-    # Run the linter.
-    - id: ruff
-      args: [ --fix ]
-    # Run the formatter.
-    - id: ruff-format
+      # Run the linter.
+      - id: ruff
+        args: [--fix]
+      # Run the formatter.
+      - id: ruff-format
