@@ -69,15 +69,20 @@ class Timeseries:
 
         Raises `ValueError` if the object is not a supported serialized form.
         """
+        if not isinstance(o, dict):
+            raise ValueError(f"Expected a dict, got {type(o).__name__}")
         object_version = o.get(cls.KEY_VERSION)
         if object_version != cls.VERSION:
             raise ValueError(f"Unsupported object version: {repr(object_version)}")
-        return cls(
-            start_time=parse_isodate(o[cls.KEY_START_TIME]),
-            data_points=o[cls.KEY_DATA_POINTS],
-            max_points=o[cls.KEY_MAX_POINTS],
-            resolution_seconds=o[cls.KEY_RESOLUTION_SECONDS],
-        )
+        try:
+            return cls(
+                start_time=parse_isodate(o[cls.KEY_START_TIME]),
+                data_points=o[cls.KEY_DATA_POINTS],
+                max_points=o[cls.KEY_MAX_POINTS],
+                resolution_seconds=o[cls.KEY_RESOLUTION_SECONDS],
+            )
+        except KeyError as e:
+            raise ValueError(f"Missing key: {e}") from e
 
     @classmethod
     def from_json_string(cls, s):

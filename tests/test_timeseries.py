@@ -105,6 +105,20 @@ class TimeseriesTestCase(unittest.TestCase):
         self.assertEqual(datetime(2020, 1, 1, 2, 30, tzinfo=UTC), self.ts.normalize(local))
         self.assertEqual(self.ts.normalize(local.astimezone(UTC)), self.ts.normalize(local))
 
+    def test_from_object_malformed(self):
+        """Any malformed serialized object raises ValueError, never KeyError etc."""
+        bad_objects = [
+            None,
+            [],
+            "not a dict",
+            {"v": 2},
+            {"v": 1},
+            {"v": 1, "start": "2020-01-01T00:00:00+00:00", "data": []},
+        ]
+        for bad in bad_objects:
+            with self.assertRaises(ValueError, msg=repr(bad)):
+                Timeseries.from_object(bad)
+
     def test_to_from_json(self):
         self.ts.add(1.23, when=self.now)
         self.ts.add(2.34, when=self.now + timedelta(seconds=5))
