@@ -5,6 +5,7 @@ from django.core import serializers
 from django.test import TestCase
 from freezegun import freeze_time
 
+from django_simple_timeseries.models import TimeseriesField
 from django_simple_timeseries.timeseries import Timeseries
 
 from .models import BasicModel
@@ -127,6 +128,13 @@ class TimeseriesFieldTests(TestCase):
 
         field = BasicModel._meta.get_field("ts1")
         self.assertIs(o.ts1, field.to_python(o.ts1))
+
+    def test_verbose_name_as_positional(self):
+        """The Django convention of a positional verbose_name must not eat the config kwargs."""
+        field = TimeseriesField("temperature history")
+        self.assertEqual("temperature history", field.verbose_name)
+        self.assertEqual(60, field.resolution_seconds)
+        self.assertEqual(60 * 24, field.max_points)
 
     def test_get_prep_value_rejects_unsupported_types(self):
         field = BasicModel._meta.get_field("ts1")
