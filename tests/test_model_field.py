@@ -116,6 +116,14 @@ class TimeseriesFieldTests(TestCase):
             obj[0],
         )
 
+    def test_malformed_db_value_returns_default(self):
+        """A stored object missing keys is replaced with a fresh series, not a KeyError."""
+        field = BasicModel._meta.get_field("ts1")
+        with freeze_time("2021-05-05"):
+            ts = field.from_db_value(json.dumps({"v": 1}), None, None)
+        self.assertEqual(datetime(2021, 5, 5, tzinfo=UTC), ts.start_time)
+        self.assertEqual([], ts.data_points)
+
     def test_deserialize_bad_value(self):
         bad_values = json.dumps(
             [
