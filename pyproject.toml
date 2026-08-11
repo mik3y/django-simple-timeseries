@@ -1,25 +1,38 @@
-[tool.poetry]
+[project]
 name = "django-simple-timeseries"
 version = "0.3.0"
-description = ""
-authors = ["mike wakerly <opensource@hoho.com>"]
+description = "Simple timeseries data type and field for Django models."
+readme = "README.md"
+authors = [{ name = "mike wakerly", email = "opensource@hoho.com" }]
+requires-python = ">=3.12,<4"
 license = "MIT"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+]
 
-[tool.poetry.dependencies]
-python = "^3.12.0"
+[project.urls]
+Homepage = "https://github.com/mik3y/django-simple-timeseries"
+Repository = "https://github.com/mik3y/django-simple-timeseries"
+Changelog = "https://github.com/mik3y/django-simple-timeseries/blob/main/CHANGELOG.md"
 
-[tool.poetry.group.dev.dependencies]
-pytest = "^8.2.1"
-tox = "^4.15.0"
-pytest-django = "^4.8.0"
-freezegun = "^1.5.1"
-setuptools = "^70.0.0"
-tox-gh-actions = "^3.2.0"
-ruff = "^0.11.8"
+[dependency-groups]
+dev = [
+    "pytest>=8.3.2,<9",
+    "tox>=4.17.1,<5",
+    "setuptools>=72.1.0,<73",
+    "pytest-django>=4.8.0,<5",
+    "twine>=6.1,<7",
+    "django>=6.0.5",
+    "ruff>=0.15.20",
+    "freezegun>=1.5.1,<2",
+]
 
 [build-system]
-requires = ["poetry-core>=1.0.0", "setuptools"]
-build-backend = "poetry.core.masonry.api"
+requires = ["uv_build>=0.9.17,<0.10.0"]
+build-backend = "uv_build"
 
 [tool.ruff]
 line-length = 100
