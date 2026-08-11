@@ -3,6 +3,7 @@
 ## Current version (in development)
 
 * Bugfix: Resolutions of one day or longer no longer crash with `ZeroDivisionError` and serialize correctly.
+* Bugfix: Aware non-UTC datetimes are now bucketed by the instant they refer to; previously their wall-clock time was misread as UTC.
 
 * Build: Switched packaging from poetry to uv.
 * Compatibility: Now tested on Python 3.12-3.14 and Django 4.2/5.2/6.0.

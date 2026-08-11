@@ -90,7 +90,9 @@ class Timeseries:
 
         Naive datetimes are assumed to be in UTC.
         """
-        ts = int(dt.replace(tzinfo=datetime.UTC).timestamp())
+        if dt.tzinfo is None:
+            dt = dt.replace(tzinfo=datetime.UTC)
+        ts = int(dt.timestamp())
         normtime = ts - (ts % int(self.resolution.total_seconds()))
         ret = datetime.datetime.fromtimestamp(normtime, datetime.UTC)
         return ret
