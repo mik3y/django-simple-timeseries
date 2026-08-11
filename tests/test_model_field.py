@@ -129,6 +129,21 @@ class TimeseriesFieldTests(TestCase):
         field = BasicModel._meta.get_field("ts1")
         self.assertIs(o.ts1, field.to_python(o.ts1))
 
+    def test_custom_default(self):
+        """An explicit default is used, and survives deconstruction for migrations."""
+
+        def make_series():
+            return Timeseries(max_points=2, resolution_seconds=10)
+
+        field = TimeseriesField(default=make_series)
+        self.assertEqual(2, field.get_default().max_points)
+        _, _, _, kwargs = field.deconstruct()
+        self.assertIs(make_series, kwargs["default"])
+
+        default_field = TimeseriesField()
+        _, _, _, kwargs = default_field.deconstruct()
+        self.assertNotIn("default", kwargs)
+
     def test_verbose_name_as_positional(self):
         """The Django convention of a positional verbose_name must not eat the config kwargs."""
         field = TimeseriesField("temperature history")

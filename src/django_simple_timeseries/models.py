@@ -27,7 +27,7 @@ class TimeseriesField(JSONField):
     def __init__(self, *args, resolution_seconds=60, max_points=60 * 24, **kwargs):
         self.resolution_seconds = resolution_seconds
         self.max_points = max_points
-        kwargs["default"] = self.new_default_timeseries
+        kwargs.setdefault("default", self.new_default_timeseries)
         super().__init__(*args, **kwargs)
 
     def new_default_timeseries(self):
