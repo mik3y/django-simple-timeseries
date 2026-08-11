@@ -128,6 +128,12 @@ class TimeseriesFieldTests(TestCase):
         field = BasicModel._meta.get_field("ts1")
         self.assertIs(o.ts1, field.to_python(o.ts1))
 
+    def test_get_prep_value_rejects_unsupported_types(self):
+        field = BasicModel._meta.get_field("ts1")
+        for bad in (123, "not a timeseries", {"v": 1}, [1, 2]):
+            with self.assertRaises(TypeError, msg=repr(bad)):
+                field.get_prep_value(bad)
+
     def test_malformed_db_value_returns_default(self):
         """A stored object missing keys is replaced with a fresh series, not a KeyError."""
         field = BasicModel._meta.get_field("ts1")

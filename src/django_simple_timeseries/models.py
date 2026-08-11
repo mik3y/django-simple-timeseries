@@ -62,6 +62,8 @@ class TimeseriesField(JSONField):
         """
         if value is None:
             value = self.new_default_timeseries()
+        elif not isinstance(value, Timeseries):
+            raise TypeError(f"Unsupported value type: {type(value)!r}; expected Timeseries")
         object_value = value.to_object()
         json_value = super().get_prep_value(object_value)
         return json_value
