@@ -24,7 +24,7 @@ class TimeseriesField(JSONField):
             dropped as newer samples are recorded.
     """
 
-    def __init__(self, resolution_seconds=60, max_points=60 * 24, *args, **kwargs):
+    def __init__(self, *args, resolution_seconds=60, max_points=60 * 24, **kwargs):
         self.resolution_seconds = resolution_seconds
         self.max_points = max_points
         kwargs["default"] = self.new_default_timeseries

@@ -7,6 +7,7 @@
 * Bugfix: `Timeseries.from_object` raises `ValueError` for every malformed input; previously a dict with missing keys raised `KeyError`, which escaped `TimeseriesField`'s malformed-value handling.
 * Bugfix: An empty series is no longer confused with a missing value; previously saving one silently reset its `start_time`.
 * Bugfix: Saving a non-`Timeseries` value raises a clear `TypeError` instead of an opaque `AttributeError`.
+* Bugfix: `resolution_seconds` and `max_points` are now keyword-only, so a positional `verbose_name` is no longer silently misread as `resolution_seconds`.
 
 * Build: Switched packaging from poetry to uv.
 * Compatibility: Now tested on Python 3.12-3.14 and Django 4.2/5.2/6.0.
