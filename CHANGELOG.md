@@ -8,6 +8,7 @@
 * Bugfix: An empty series is no longer confused with a missing value; previously saving one silently reset its `start_time`.
 * Bugfix: Saving a non-`Timeseries` value raises a clear `TypeError` instead of an opaque `AttributeError`.
 * Bugfix: `resolution_seconds` and `max_points` are now keyword-only, so a positional `verbose_name` is no longer silently misread as `resolution_seconds`.
+* Bugfix: The admin widget renders a placeholder for missing values instead of crashing, and reports the true number of points when all values are equal.
 
 * Build: Switched packaging from poetry to uv.
 * Compatibility: Now tested on Python 3.12-3.14 and Django 4.2/5.2/6.0.
