@@ -10,6 +10,23 @@ def parse_isodate(s):
 
 
 class Timeseries:
+    """A compact, fixed-resolution timeseries.
+
+    Samples are stored as a flat vector of values, bucketed to `resolution_seconds`.
+    The vector holds at most `max_points` values; recording a newer sample beyond
+    that window shifts the series forward, dropping the oldest values. Gaps between
+    samples are recorded as `None`.
+
+    Only `start_time` is stored; the timestamp of every other bucket is derived
+    from it, which is what keeps the serialized form small.
+
+    Arguments:
+        start_time: The datetime of the first bucket. Defaults to the current time.
+        data_points: Initial vector of values. Defaults to an empty series.
+        max_points: Maximum number of buckets to retain.
+        resolution_seconds: The width of each bucket, in seconds.
+    """
+
     VERSION = 1
 
     RESULT_ADDED = "added"
@@ -48,6 +65,10 @@ class Timeseries:
 
     @classmethod
     def from_object(cls, o):
+        """Builds a `Timeseries` from a dict previously produced by `to_object`.
+
+        Raises `ValueError` if the object is not a supported serialized form.
+        """
         object_version = o.get(cls.KEY_VERSION)
         if object_version != cls.VERSION:
             raise ValueError(f"Unsupported object version: {repr(object_version)}")
@@ -60,10 +81,15 @@ class Timeseries:
 
     @classmethod
     def from_json_string(cls, s):
+        """Builds a `Timeseries` from a JSON string previously produced by `to_json_string`."""
         o = json.loads(s)
         return cls.from_object(o)
 
     def normalize(self, dt):
+        """Rounds `dt` down to the start of its bucket.
+
+        Naive datetimes are assumed to be in UTC.
+        """
         ts = int(dt.replace(tzinfo=datetime.UTC).timestamp())
         normtime = ts - (ts % self.resolution.seconds)
         ret = datetime.datetime.fromtimestamp(normtime, datetime.UTC)
@@ -78,12 +104,18 @@ class Timeseries:
         return self.start_time + self.resolution * (num_samples - 1)
 
     def has_a_current_sample(self, when=None):
+        """Returns `True` if the most recent sample falls in the same bucket as `when`.
+
+        In other words, whether calling `add` at time `when` would replace the latest
+        value rather than record a new one. `when` defaults to the current time.
+        """
         when = when or timezone.now()
         if not len(self.data_points):
             return False
         return self.end_time == self.normalize(when)
 
     def to_object(self):
+        """Returns this series as a plain, JSON-serializable dict."""
         return {
             self.KEY_VERSION: self.VERSION,
             self.KEY_START_TIME: self.start_time.isoformat(timespec="seconds"),
@@ -93,9 +125,22 @@ class Timeseries:
         }
 
     def to_json_string(self):
+        """Returns this series serialized as a JSON string."""
         return json.dumps(self.to_object(), indent=0)
 
     def add(self, value, when=None):
+        """Records `value` in the bucket containing time `when` (default: now).
+
+        Depending on where `when` falls, the sample either replaces the latest
+        value (same bucket), is appended (later bucket, `None`-padding any gap
+        and dropping the oldest values once `max_points` is exceeded), or resets
+        the series entirely (so far beyond the window that no old values remain).
+
+        Returns one of `RESULT_REPLACED`, `RESULT_ADDED`, `RESULT_SHIFTED`, or
+        `RESULT_TRUNCATED`, describing what happened.
+
+        Raises `ValueError` if `when` is older than the most recent sample.
+        """
         when = self.normalize(when or timezone.now())
         current_sample_time = self.end_time
         distance_in_samples = math.floor((when - current_sample_time) / self.resolution)
@@ -134,13 +179,18 @@ class Timeseries:
             return self.RESULT_SHIFTED if trim_samples else self.RESULT_ADDED
 
     def iter_points(self):
-        ts = self.start_time
+        """Yields `(datetime, value)` tuples, one per bucket; gaps have value `None`."""
         for i, v in enumerate(self.data_points):
             ts = self.start_time + (i * self.resolution)
             yield (ts, v)
 
     def get_normalized_points(self):
-        """Returns a list of points, normalized to values between 0 and 1."""
+        """Returns `(minval, maxval, points)`, with values rescaled to the range 0-1.
+
+        `points` is a list of `(datetime, value)` tuples; gaps (`None` values)
+        are rescaled to 0. Returns `(None, None, [])` when the series has no
+        values or all values are equal, since there is no range to rescale to.
+        """
         minval = None
         maxval = None
         ret = []

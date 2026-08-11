@@ -41,6 +41,8 @@ SPARKLINE_SVG_TEMPLATE = Template(
 
 
 class TimeseriesWidget(Widget):
+    """Read-only widget rendering a `Timeseries` as an inline SVG sparkline."""
+
     def render(self, name, value, attrs=None, renderer=None):
         minval, maxval, points = value.get_normalized_points()
         svg = SPARKLINE_SVG_TEMPLATE.substitute(
@@ -58,6 +60,13 @@ class TimeseriesWidget(Widget):
 
 
 class TimeseriesFormField(Field):
+    """Form field for `TimeseriesField`.
+
+    Timeseries data is recorded programmatically, not edited by hand, so this
+    field is display-only: it renders the current series via `TimeseriesWidget`
+    and never reports a change on form submission.
+    """
+
     default_error_messages = {
         "invalid": _("Enter a valid Timeseries."),
     }
