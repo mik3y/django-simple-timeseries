@@ -1,6 +1,6 @@
 import json
 import unittest
-from datetime import UTC, timedelta
+from datetime import UTC, timedelta, timezone
 
 from django.utils.timezone import datetime
 
@@ -97,6 +97,13 @@ class TimeseriesTestCase(unittest.TestCase):
         self.assertEqual(datetime(2020, 1, 1, tzinfo=UTC), ts.start_time)
         self.assertEqual(86400, ts.to_object()["res"])
         self.assertEqual(ts, Timeseries.from_object(ts.to_object()))
+
+    def test_normalize_non_utc(self):
+        """A given instant lands in the same bucket regardless of its timezone."""
+        plus5 = timezone(timedelta(hours=5))
+        local = datetime(2020, 1, 1, 7, 30, 1, tzinfo=plus5)  # == 02:30:01 UTC
+        self.assertEqual(datetime(2020, 1, 1, 2, 30, tzinfo=UTC), self.ts.normalize(local))
+        self.assertEqual(self.ts.normalize(local.astimezone(UTC)), self.ts.normalize(local))
 
     def test_to_from_json(self):
         self.ts.add(1.23, when=self.now)
