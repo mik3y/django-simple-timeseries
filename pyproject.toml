@@ -1,6 +1,6 @@
 [project]
 name = "django-simple-timeseries"
-version = "0.3.0"
+version = "0.4.0"
 description = "Simple timeseries data type and field for Django models."
 readme = "README.md"
 authors = [{ name = "mike wakerly", email = "opensource@hoho.com" }]
