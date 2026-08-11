@@ -1,0 +1,26 @@
+name: pre-commit
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  pre-commit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+      # These steps are what pre-commit/action@v3.0.1 did for us. That action is
+      # unmaintained and pins actions/cache@v4, which still runs on Node 20.
+      - uses: actions/cache@v6
+        with:
+          path: ~/.cache/pre-commit
+          key: pre-commit-${{ runner.os }}-${{ hashFiles('.pre-commit-config.yaml') }}
+      - run: python -m pip install pre-commit
+      - run: pre-commit run --all-files --show-diff-on-failure --color=always

@@ -4,38 +4,31 @@ on:
   push:
     tags:
       - 'v*'
-  workflow_dispatch:
-    inputs:
-      tag:
-        description: 'Tag to publish (e.g. v1.0.0)'
-        required: true
-        type: string
 
 jobs:
   publish:
     runs-on: ubuntu-latest
+    permissions:
+      # Needed to create the GitHub release.
+      contents: write
+      # Needed to mint the OIDC token PyPI trusted publishing authenticates with.
+      id-token: write
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v7
         with:
-          ref: ${{ github.event.inputs.tag || github.ref_name }}
-      - name: Set up Python 3.13
-        uses: actions/setup-python@v5
-        with:
-          python-version: 3.13
+          python-version: "3.12"
       - name: Build package
         run: |
-          python -m pip install --upgrade build
+          python -m pip install --upgrade pip build
           python -m build
       - name: Create release
-        id: create_release
-        uses: actions/create-release@v1
+        run: gh release create "${GITHUB_REF_NAME}" --title "${GITHUB_REF_NAME}" --generate-notes
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: ${{ github.event.inputs.tag || github.ref_name }}
-          release_name: ${{ github.event.inputs.tag || github.ref_name }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      # Authenticates via OIDC (PyPI trusted publishing), so there is no API
+      # token to store. PyPI matches the request against the publisher
+      # configured for this repo and this workflow filename.
       - name: Publish package to PyPI
-        uses: pypa/gh-action-pypi-publish@master
-        with:
-          user: __token__
-          password: ${{ secrets.PYPI_PASSWORD }}
+        uses: pypa/gh-action-pypi-publish@release/v1
